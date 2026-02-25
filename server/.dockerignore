@@ -1,0 +1,48 @@
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environment variables (use docker-compose or -e flags instead)
+.env
+.env.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+
+# Test files
+tests/
+*.pytest_cache/
+.coverage
+htmlcov/
+
+# Pathway output (if you want fresh starts)
+pathway_output/
+
+# Examples
+examples/
+
+# Scripts
+setup_pathway.sh

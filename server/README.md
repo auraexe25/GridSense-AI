@@ -76,6 +76,35 @@ The server will start at `http://localhost:8000`
 - `GET /api/stream/internal` - Device data only
 - `GET /api/stream/external` - Grid context only
 
+## Pathway Real-Time Processing
+
+### Running Pathway Pipeline
+
+The Pathway pipeline provides real-time stream processing with LLM-powered recommendations:
+
+```bash
+# Terminal 1: Start API server
+fastapi dev main.py
+
+# Terminal 2: Start Pathway processor
+python run_pathway.py
+```
+
+### Features
+
+- Real-time anomaly detection
+- Device statistics and aggregations
+- LLM-powered optimization recommendations using Gemini 2.0 Flash
+- Specific, actionable insights with cost and carbon savings
+
+### Pathway Endpoints
+
+- `GET /pathway/recommendations` - Get LLM-generated optimization recommendations
+- `GET /pathway/anomalies` - Get detected anomalies
+- `GET /pathway/statistics` - Get device statistics
+- `GET /pathway/status` - Check if Pathway is running
+- `GET /pathway/summary` - Get summary of all results
+
 ## Testing
 
 Run the comprehensive test suite:

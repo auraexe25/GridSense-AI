@@ -1,4 +1,4 @@
-import type { DeviceTelemetry, GridContext, DeviceListResponse, ControlResponse } from "./types";
+import type { DeviceTelemetry, GridContext, DeviceListResponse, ControlResponse, PathwayStatus, PathwayAnomaliesResponse, PathwayRecommendationsResponse, PathwayStatisticsResponse, PathwaySummary } from "./types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -72,6 +72,27 @@ class ApiClient {
     // Grid Context Endpoints
     async getGridContext(): Promise<GridContext> {
         return this.fetch<GridContext>("/api/grid");
+    }
+
+    // Pathway Analytics Endpoints
+    async getPathwayStatus(): Promise<PathwayStatus> {
+        return this.fetch<PathwayStatus>("/api/pathway/status");
+    }
+
+    async getPathwayAnomalies(limit: number = 50): Promise<PathwayAnomaliesResponse> {
+        return this.fetch<PathwayAnomaliesResponse>(`/api/pathway/anomalies?limit=${limit}`);
+    }
+
+    async getPathwayRecommendations(limit: number = 50): Promise<PathwayRecommendationsResponse> {
+        return this.fetch<PathwayRecommendationsResponse>(`/api/pathway/recommendations?limit=${limit}`);
+    }
+
+    async getPathwayStatistics(): Promise<PathwayStatisticsResponse> {
+        return this.fetch<PathwayStatisticsResponse>("/api/pathway/statistics");
+    }
+
+    async getPathwaySummary(): Promise<PathwaySummary> {
+        return this.fetch<PathwaySummary>("/api/pathway/summary");
     }
 }
 

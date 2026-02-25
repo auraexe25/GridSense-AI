@@ -12,11 +12,11 @@ interface AIPanelProps {
     totalCurrent?: number;
 }
 
-export function AIPanel({ 
-    critical = false, 
-    insights = [], 
+export function AIPanel({
+    critical = false,
+    insights = [],
     gridContext = null,
-    totalCurrent = 0 
+    totalCurrent = 0,
 }: AIPanelProps) {
     const defaultInsights = [
         "All systems operating within normal parameters",
@@ -30,68 +30,85 @@ export function AIPanel({
         "Consider reducing load or shutting down non-essential devices",
     ];
 
-    // Generate context-aware insights
     const contextInsights: string[] = [];
-    
-    if (gridContext) {
-        // Carbon awareness
-        if (gridContext.carbon_level === "HIGH") {
-            contextInsights.push(
-                `⚠️ High carbon intensity (${Math.round(gridContext.carbon_intensity)} gCO₂/kWh). Consider deferring non-critical loads.`
-            );
-        } else if (gridContext.carbon_level === "LOW") {
-            contextInsights.push(
-                `✓ Low carbon intensity period. Good time to run heavy equipment.`
-            );
-        }
 
-        // Pricing awareness
+    if (gridContext) {
         if (gridContext.pricing_tier === "HIGH") {
             contextInsights.push(
-                `💰 Peak pricing period ($${gridContext.electricity_price.toFixed(4)}/kWh). Running at ${Math.round(totalCurrent)}A costs ~$${((totalCurrent * 230 / 1000) * gridContext.electricity_price).toFixed(2)}/hr.`
+                `Peak pricing period ($${gridContext.electricity_price.toFixed(3)}/kWh). Running at ${Math.round(totalCurrent)}A costs ~$${(((totalCurrent * 230) / 1000) * gridContext.electricity_price).toFixed(2)}/hr.`,
             );
-        } else if (gridContext.pricing_tier === "LOW") {
+        } else if (gridContext.carbon_level === "HIGH") {
             contextInsights.push(
-                `✓ Off-peak pricing. Cost-effective time to operate heavy loads.`
+                `High carbon intensity (${Math.round(gridContext.carbon_intensity)} gCO2/kWh). Consider deferring non-critical loads.`,
+            );
+        } else if (
+            gridContext.pricing_tier === "LOW" &&
+            gridContext.carbon_level === "LOW"
+        ) {
+            contextInsights.push(
+                `Optimal conditions: Low pricing and ${gridContext.grid_renewable_percentage.toFixed(0)}% renewable energy.`,
             );
         }
 
-        // Renewable percentage
-        if (gridContext.grid_renewable_percentage > 60) {
+        if (gridContext.grid_renewable_percentage > 70) {
             contextInsights.push(
-                `🌱 Grid is ${gridContext.grid_renewable_percentage.toFixed(1)}% renewable. Clean energy period!`
+                `Grid is ${gridContext.grid_renewable_percentage.toFixed(0)}% renewable. Clean energy period.`,
             );
         }
     }
 
-    const displayInsights = insights.length > 0 
-        ? insights 
-        : (critical ? criticalInsights : [...contextInsights, ...defaultInsights].slice(0, 3));
+    const displayInsights =
+        insights.length > 0
+            ? insights
+            : critical
+              ? criticalInsights
+              : [...contextInsights, ...defaultInsights].slice(0, 3);
 
     return (
-        <Card className={critical ? "border-l-4 border-red-500" : ""}>
-            <div className="mb-4 flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                    critical ? "bg-red-500/10" : "bg-blue-500/10"
-                }`}>
-                    <Bot className={`w-5 h-5 ${critical ? "text-red-500" : "text-blue-500"}`} />
+        <Card
+            className={`${critical ? "border-l-4 border-red-500" : ""} w-1/4`}
+        >
+            <div className="mb-4 flex items-center gap-3 w-full">
+                <div
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        critical ? "bg-red-500/10" : "bg-blue-500/10"
+                    }`}
+                >
+                    <Bot
+                        className={`w-5 h-5 ${critical ? "text-red-500" : "text-blue-500"}`}
+                    />
                 </div>
                 <Heading level={3}>AI Insights</Heading>
             </div>
 
             <div className="space-y-3">
-                {displayInsights.map((insight, index) => (
-                    <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/50">
-                        {critical ? (
-                            <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                        ) : (
-                            <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                        )}
-                        <Body className="text-xs flex-1">
-                            {insight}
-                        </Body>
-                    </div>
-                ))}
+                {displayInsights.map((insight, index) => {
+                    const isHighPriority =
+                        insight.toLowerCase().includes("stopping") ||
+                        insight.toLowerCase().includes("save") ||
+                        insight.toLowerCase().includes("high");
+                    const isOptimal =
+                        insight.toLowerCase().includes("optimal") ||
+                        insight.toLowerCase().includes("good time");
+
+                    return (
+                        <div
+                            key={index}
+                            className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/50"
+                        >
+                            {critical ? (
+                                <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
+                            ) : isHighPriority ? (
+                                <Info className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                            ) : isOptimal ? (
+                                <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
+                            ) : (
+                                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+                            )}
+                            <Body className="text-xs flex-1">{insight}</Body>
+                        </div>
+                    );
+                })}
             </div>
 
             <div className="mt-4 pt-4 border-t border-slate-800">

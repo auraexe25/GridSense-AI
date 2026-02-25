@@ -29,10 +29,12 @@ export function DeviceTable({ devices, onDeviceControl }: DeviceTableProps) {
     };
 
     return (
-        <Card>
+        <Card className="w-full">
             <div className="mb-4">
                 <Heading level={3}>Device Status</Heading>
-                <p className="text-sm text-slate-400 mt-1">{devices.length} devices connected</p>
+                <p className="text-sm text-slate-400 mt-1">
+                    {devices.length} devices connected
+                </p>
             </div>
 
             <div className="overflow-x-auto">
@@ -58,11 +60,16 @@ export function DeviceTable({ devices, onDeviceControl }: DeviceTableProps) {
                     </thead>
                     <tbody>
                         {devices.map((device) => (
-                            <tr key={device.device_id} className="border-b border-slate-800/50 last:border-0">
+                            <tr
+                                key={device.device_id}
+                                className="border-b border-slate-800/50 last:border-0"
+                            >
                                 <td className="py-4">
                                     <div>
                                         <div className="text-sm font-medium text-slate-100">
-                                            {formatDeviceType(device.device_type)}
+                                            {formatDeviceType(
+                                                device.device_type,
+                                            )}
                                         </div>
                                         <div className="text-xs text-slate-500 font-mono">
                                             {device.device_id}
@@ -70,7 +77,11 @@ export function DeviceTable({ devices, onDeviceControl }: DeviceTableProps) {
                                     </div>
                                 </td>
                                 <td className="py-4">
-                                    <Badge variant={getStatusVariant(device.status)}>
+                                    <Badge
+                                        variant={getStatusVariant(
+                                            device.status,
+                                        )}
+                                    >
                                         {device.status}
                                     </Badge>
                                 </td>
@@ -89,15 +100,27 @@ export function DeviceTable({ devices, onDeviceControl }: DeviceTableProps) {
                                         <Button
                                             size="sm"
                                             variant="secondary"
-                                            onClick={() => onDeviceControl?.(device.device_id, "on")}
-                                            disabled={device.status === "running"}
+                                            onClick={() =>
+                                                onDeviceControl?.(
+                                                    device.device_id,
+                                                    "on",
+                                                )
+                                            }
+                                            disabled={
+                                                device.status === "running"
+                                            }
                                         >
                                             <Power className="w-3 h-3" />
                                         </Button>
                                         <Button
                                             size="sm"
                                             variant="secondary"
-                                            onClick={() => onDeviceControl?.(device.device_id, "off")}
+                                            onClick={() =>
+                                                onDeviceControl?.(
+                                                    device.device_id,
+                                                    "off",
+                                                )
+                                            }
                                             disabled={device.status === "off"}
                                         >
                                             <PowerOff className="w-3 h-3" />

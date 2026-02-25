@@ -5,3 +5,4 @@ export { MetricsGrid } from "./MetricsGrid";
 export { LiveChart } from "./LiveChart";
 export { DeviceTable } from "./DeviceTable";
 export { AIPanel } from "./AIPanel";
+export { PathwayPanel } from "./PathwayPanel";
