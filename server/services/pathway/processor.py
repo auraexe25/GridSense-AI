@@ -248,16 +248,23 @@ def main():
     Ensure the FastAPI server is running on http://localhost:8000
     """
     from .utils import check_api_server
+    import time
     
     print("Checking if GridSense API is running...")
     
-    if check_api_server():
-        print("API server is ready!\n")
-        processor = PathwayProcessor()
-        processor.run()
-    else:
-        print("Cannot connect to GridSense API at http://localhost:8000")
-        print("Start the server with: uvicorn main:app --reload")
+    max_attempts = 30
+    for attempt in range(1, max_attempts + 1):
+        if check_api_server():
+            print("API server is ready.\n")
+            processor = PathwayProcessor()
+            processor.run()
+            return
+        
+        print(f"API not ready yet (attempt {attempt}/{max_attempts})")
+        time.sleep(2)
+    
+    print("Cannot connect to GridSense API.")
+    print("Make sure the GridSense API server is running before starting the Pathway pipeline.")
 
 
 if __name__ == "__main__":

@@ -11,7 +11,8 @@ from typing import Final
 class PathwayConfig:
     """Configuration for Pathway stream processing"""
     
-    API_BASE_URL: Final[str] = os.getenv("API_BASE_URL", "http://localhost:8000")
+    API_PORT: Final[int] = int(os.getenv("API_PORT") or os.getenv("PORT", "8000"))
+    API_BASE_URL: Final[str] = os.getenv("API_BASE_URL", f"http://localhost:{API_PORT}")
     INTERNAL_STREAM_PATH: Final[str] = "/api/stream/internal"
     EXTERNAL_STREAM_PATH: Final[str] = "/api/stream/external"
     
